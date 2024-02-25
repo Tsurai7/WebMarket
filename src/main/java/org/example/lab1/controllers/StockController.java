@@ -23,7 +23,7 @@ public class StockController
     @GetMapping("/getString")
     public String getString(@RequestParam String word)
     {
-        return "Result: " + word;
+        return " { result: " + word + " }";
     }
 
     @GetMapping("/daily")
