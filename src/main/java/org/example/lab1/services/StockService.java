@@ -8,15 +8,15 @@ import reactor.core.publisher.Flux;
 @Service
 public class StockService
 {
-    private static final String ApiKey = "QHFJAP4MXU0RPMN4";
-    private static final String BaseUrl =  "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=5min&apikey=" + ApiKey;
+    private static final String API_KEY = "QHFJAP4MXU0RPMN4";
+    private static final String BASE_URL =  "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=AAPL&interval=5min&apikey=" + API_KEY;
 
     public Flux<StockResponse> getDailyInfo()
     {
         WebClient client = WebClient.create();
 
         return client.get()
-                .uri(BaseUrl)
+                .uri(BASE_URL)
                 .retrieve()
                 .bodyToFlux(StockResponse.class);
     }
