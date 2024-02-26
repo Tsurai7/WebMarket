@@ -24,20 +24,20 @@ This application provides the most relevant information about stock market chang
         "6. Time Zone": "US/Eastern"
         },
         "Time Series (5min)": {
-        "2024-02-23 19:55:00": {
-        "1. open": "182.3500",
-        "2. high": "182.3500",
-        "3. low": "182.2300",
-        "4. close": "182.2400",
-        "5. volume": "6326"
-        },
-        "2024-02-23 19:50:00": {
-        "1. open": "182.2900",
-        "2. high": "182.3800",
-        "3. low": "182.2900",
-        "4. close": "182.3200",
-        "5. volume": "2030"
-        }, 
+            "2024-02-23 19:55:00": {
+                "1. open": "182.3500",
+                "2. high": "182.3500",
+                "3. low": "182.2300",
+                "4. close": "182.2400",
+                "5. volume": "6326"
+            },
+            "2024-02-23 19:50:00": {
+                "1. open": "182.2900",
+                "2. high": "182.3800",
+                "3. low": "182.2900",
+                "4. close": "182.3200",
+                "5. volume": "2030"
+            }, 
             ...
 ## Prerequisites
 - Java Development Kit (JDK) 17 or later
