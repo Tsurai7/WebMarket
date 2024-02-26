@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import org.springframework.web.client.HttpClientErrorException;
 import reactor.core.publisher.Flux;
 import org.example.lab1.services.StockService;
 
