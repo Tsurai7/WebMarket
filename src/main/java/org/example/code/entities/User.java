@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Entity
@@ -22,8 +24,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    //@ManyToMany(mappedBy = "users")
-    //private Set<Stock> stocks;
 
     public User(String name, String password) {
         this.name = name;

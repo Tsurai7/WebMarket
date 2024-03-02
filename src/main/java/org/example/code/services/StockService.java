@@ -21,12 +21,11 @@ public class StockService
 
     public void initDb() {
 
-        List<String> tickers = List.of("AAPL", "GOOGL", "MSFT", "AMZN", "META");
-
-        WebClient client = WebClient.create();
+        List<String> tickers = List.of("AAPL", "GOOGL", "MSFT", "AMZN", "META", "TSLA", "GS", "DJIA", "SPX", "COMP");
 
         for(String ticker : tickers) {
 
+            WebClient client = WebClient.create();
             String apiUrl = String.format(BASE_URL, ticker);
 
             StockResponse response =
@@ -40,6 +39,11 @@ public class StockService
 
             stockRepository.save(stock);
         }
+    }
+
+    public List<Stock> getAll() {
+        initDb();
+        return stockRepository.findAll();
     }
 
     public Flux<StockResponse> getDailyInfo(String ticker)

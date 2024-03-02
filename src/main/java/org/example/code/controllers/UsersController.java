@@ -6,6 +6,7 @@ import org.example.code.services.AccountService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -20,12 +21,16 @@ public class UsersController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody String name, @RequestBody String password) {
+    public User register(@RequestBody Map<String, String> requestBody) {
+        String name = requestBody.get("name");
+        String password = requestBody.get("password");
         return accountService.register(name, password);
     }
-    
+
     @GetMapping("/login")
-    public User login(@RequestBody String name, @RequestBody String password) {
+    public User login(@RequestBody Map<String, String> requestBody) {
+        String name = requestBody.get("name");
+        String password = requestBody.get("password");
         return accountService.login(name, password);
     }
 

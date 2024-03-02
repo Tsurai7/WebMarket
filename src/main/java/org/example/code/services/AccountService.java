@@ -36,10 +36,9 @@ public class AccountService {
         if (password.equals(user.getPassword())) {
             return user;
         }
+
         else {
             throw new IllegalArgumentException("Invalid password");
         }
-
     }
-
 }
