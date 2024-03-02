@@ -1,6 +1,6 @@
-package org.example.lab1.models;
+package org.example.code.models;
 
-public enum StockTickers
+public enum StockTickersEnum
 {
     AAPL,
     GOOGL,

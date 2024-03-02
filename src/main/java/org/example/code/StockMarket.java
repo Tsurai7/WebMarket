@@ -1,13 +1,15 @@
-package org.example.lab1;
+package org.example.code;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+@EnableSwagger2
 @SpringBootApplication
-public class Lab1Application
+public class StockMarket
 {
 	public static void main(String[] args)
 	{
-		SpringApplication.run(Lab1Application.class, args);
+		SpringApplication.run(StockMarket.class, args);
 	}
 }

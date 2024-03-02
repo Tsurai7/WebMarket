@@ -1,13 +1,17 @@
-package org.example.lab1.models;
+package org.example.code.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 
+@Getter
+@Setter
 public class StockResponse {
     @JsonProperty("Meta Data")
     private MetaData metaData;
 
     @JsonProperty("Time Series (5min)")
-    private Map<String, TimeSeriesData> timeSeries;
+    public Map<String, TimeSeriesData> timeSeries;
 }

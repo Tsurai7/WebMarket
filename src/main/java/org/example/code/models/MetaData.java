@@ -1,10 +1,13 @@
-package org.example.lab1.models;
+package org.example.code.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-
+@Getter
+@Setter
 class MetaData {
     @JsonProperty("1. Information")
     private String information;
@@ -23,5 +26,4 @@ class MetaData {
 
     @JsonProperty("6. Time Zone")
     private String timeZone;
-
 }

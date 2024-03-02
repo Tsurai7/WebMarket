@@ -1,10 +1,14 @@
-package org.example.lab1.models;
+package org.example.code.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class TimeSeriesData {
+@Getter
+@Setter
+public class TimeSeriesData {
     @JsonProperty("1. open")
     private String open;
 
