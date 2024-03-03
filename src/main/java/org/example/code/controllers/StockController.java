@@ -1,6 +1,5 @@
 package org.example.code.controllers;
 
-import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.example.code.entities.Stock;
 import org.example.code.models.StockResponse;

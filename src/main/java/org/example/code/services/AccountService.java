@@ -17,28 +17,45 @@ public class AccountService {
         return userRepository.findAll();
     }
 
-    public User register(String name, String password) {
+    public User getById(Long id) {
+        return userRepository.findById(id).orElseThrow(() ->
+                new IllegalArgumentException("User not found"));
+    }
 
-        if (userRepository.existsByName(name)) {
+    public User register(User user) {
+        if (userRepository.existsByName(user.getName())) {
             throw new IllegalArgumentException("Username is already taken");
         }
 
-        User user = new User(name, password);
+        User userInDb = new User(user.getName(), user.getPassword());
 
-        return userRepository.save(user);
+        return userRepository.save(userInDb);
     }
 
-    public User login(String name, String password) {
-
-        User user = userRepository.findByName(name)
+    public User login(User user) {
+        User userInDb = userRepository.findByName(user.getName())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        if (password.equals(user.getPassword())) {
-            return user;
+        if (user.getPassword().equals(userInDb.getPassword())) {
+            return userInDb;
         }
 
         else {
             throw new IllegalArgumentException("Invalid password");
         }
+    }
+
+    public User update(Long id, User user) {
+        return userRepository.findById(id).map(u -> {
+                        u.setName(user.getName());
+                        u.setPassword(user.getPassword());
+                        return userRepository.save(u);
+                })
+                .orElseThrow(() ->
+                        new IllegalArgumentException("User not found"));
+    }
+
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 }
