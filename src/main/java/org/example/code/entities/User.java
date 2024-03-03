@@ -24,6 +24,14 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_stock",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "stock_id")
+    )
+    private Set<Stock> stocks;
+
 
     public User(String name, String password) {
         this.name = name;
