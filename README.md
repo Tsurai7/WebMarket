@@ -8,6 +8,15 @@ This application provides the most relevant information about stock market chang
 
 ## Api source 
     https://www.alphavantage.co/documentation/#
+## CRUD actions support
+    GET http://localhost:8080/api/users/getAll
+
+    POST http://localhost:8080/api/users/register
+
+    PUT http://localhost:8080/api/users/update/2
+
+    DELETE http://localhost:8080/api/users/delete/2
+
 ## Query examples
     GET http://localhost:8080/api/stocks/getString?word=123
 ***
