@@ -1,6 +1,7 @@
 package org.example.code.controllers;
 
 import lombok.AllArgsConstructor;
+import org.example.code.entities.BankCard;
 import org.example.code.entities.User;
 import org.example.code.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +12,23 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/users")
-public class UsersController {
+public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/{userId}/addProduct/{productId}")
-    public ResponseEntity<List<User>> addProductToUser(@PathVariable Long userId, @PathVariable Long productId) {
+    @PostMapping("/addProduct")
+    public ResponseEntity<User> addProductToUser(@RequestParam Long userId, @RequestParam Long productId) {
         return userService.addProductToUser(userId, productId);
+    }
+
+    @PostMapping("/addCard")
+    public ResponseEntity<User> addCard(@RequestParam Long userId, @RequestBody BankCard card) {
+        return userService.addCard(userId, card);
+    }
+
+    @DeleteMapping("/removeCard")
+    public ResponseEntity<User> removeCard(@RequestParam Long id) {
+        return userService.removeCard(id);
     }
 
     @GetMapping("/getAll")
@@ -25,8 +36,8 @@ public class UsersController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/getById/{id}")
-    public User getById(@PathVariable Long id) {
+    @GetMapping("/getById")
+    public User getById(@RequestParam Long id) {
         return userService.getById(id);
     }
 
@@ -40,13 +51,13 @@ public class UsersController {
         return userService.register(user);
     }
 
-    @PutMapping("/update/{id}")
-    public User update(@PathVariable Long id, @RequestBody User user) {
+    @PutMapping("/update")
+    public User update(@RequestParam Long id, @RequestBody User user) {
         return userService.update(id, user);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable Long id) {
+    @DeleteMapping("/delete")
+    public void delete(@RequestParam Long id) {
         userService.delete(id);
     }
 }

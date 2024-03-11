@@ -24,17 +24,29 @@ public class Product {
 
     private String description;
 
-    @ManyToMany(mappedBy = "products", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private String category;
+
     @JsonBackReference
+    @ManyToMany(mappedBy = "products", fetch = FetchType.EAGER)
     private Set<User> users = new HashSet<>();
 
-    public Product(String title, String description) {
+    public Product(String title, String description, String category) {
         this.title = title;
         this.description = description;
+        this.category = category;
     }
 
-    public void addUser(User user) {
+    public void addUsers(User user) {
         users.add(user);
+    }
+
+    public void removeUser(User user) {
+        users.remove(user);
+    }
+
+    @PreRemove
+    public void removeAllUsers() {
+        users.forEach(user -> user.removeProduct(this));
     }
 }
 

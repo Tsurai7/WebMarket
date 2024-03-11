@@ -1,12 +1,14 @@
 package org.example.code.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -14,7 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name="users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,18 +27,10 @@ public class User {
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_products",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
-    )
-    @JsonBackReference
-    private Set<Product> products = new HashSet<>();
+    private List<Product> products = new ArrayList<>();
 
-    @OneToMany(mappedBy = "holder", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
+    @OneToMany(mappedBy = "holder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BankCard> bankCards = new HashSet<>();
-
 
     public User(String name, String password) {
         this.name = name;
@@ -45,5 +39,30 @@ public class User {
 
     public void addProduct(Product product) {
         products.add(product);
+        product.getUsers().add(this);
+    }
+
+    public void addCard(BankCard card) {
+        bankCards.add(card);
+        card.setHolder(this);
+    }
+
+    public void removeCard(BankCard card) {
+        bankCards.remove(card);
+        card.setHolder(null);
+    }
+
+    public void removeAllCards() {
+        bankCards.forEach(card -> card.setHolder(null));
+    }
+
+
+    public void removeProduct(Product product) {
+        products.remove(product);
+        product.getUsers().remove(this);
+    }
+
+    public void removeAllProducts() {
+        products.forEach(product -> product.removeUser(this));
     }
 }

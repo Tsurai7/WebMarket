@@ -23,18 +23,18 @@ public class DataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Product laptop = new Product("Laptop", "Powerful laptop");
+        Product laptop = new Product("Laptop", "Powerful laptop", "gadgets");
         productRepository.save(laptop);
 
-        Product iphone = new Product("Iphone", "Black color");
+        Product iphone = new Product("Iphone", "Black color", "gadgets");
         productRepository.save(iphone);
 
         User john = new User("John", "password");
         john.addProduct(laptop);
         userRepository.save(john);
 
-        BankCard card1 = new BankCard(1233131, 737);
-        card1.setHolder(john);
-        bankCardRepository.save(card1);
+        BankCard johnsCard = new BankCard("1233131", 737);
+        johnsCard.setHolder(john);
+        bankCardRepository.save(johnsCard);
     }
 }

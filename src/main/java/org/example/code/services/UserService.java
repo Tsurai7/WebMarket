@@ -2,27 +2,31 @@ package org.example.code.services;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.example.code.dtos.UserDto;
+import org.example.code.entities.BankCard;
 import org.example.code.entities.Product;
 import org.example.code.entities.User;
+import org.example.code.repositories.BankCardRepository;
 import org.example.code.repositories.ProductRepository;
 import org.example.code.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+
 
 @Service
 @AllArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+
     private final ProductRepository productRepository;
 
+    private final BankCardRepository bankCardRepository;
+
     @Transactional
-    public ResponseEntity<List<User>> addProductToUser(Long userId, Long productId) {
+    public ResponseEntity<User> addProductToUser(Long userId, Long productId) {
 
         User user = userRepository.findById(userId).orElse(null);
         Product product = productRepository.findById(productId).orElse(null);
@@ -31,7 +35,21 @@ public class UserService {
             user.addProduct(product);
             userRepository.save(user);
 
-            return new ResponseEntity<>(userRepository.findAll(), HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    public ResponseEntity<User> addCard(Long userId, BankCard card) {
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user != null) {
+            bankCardRepository.save(card);
+            user.addCard(card);
+            userRepository.save(user);
+
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -81,6 +99,14 @@ public class UserService {
     }
 
     public void delete(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        user.removeAllProducts();
+
         userRepository.deleteById(id);
+    }
+
+    public ResponseEntity<User> removeCard(Long id) {
+        bankCardRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

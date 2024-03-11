@@ -18,15 +18,20 @@ public class BankCard {
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User holder;
 
-    private int number;
+    private String  number;
 
     private int cvc;
 
-    public BankCard(int number, int cvc) {
+    public BankCard(String number, int cvc) {
         this.number = number;
         this.cvc = cvc;
+    }
+
+    @PreRemove
+    public  void removeHolder()
+    {
+        this.holder = null;
     }
 }
