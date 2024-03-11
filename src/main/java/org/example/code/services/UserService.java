@@ -2,6 +2,7 @@ package org.example.code.services;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.example.code.config.CacheConfig;
 import org.example.code.entities.BankCard;
 import org.example.code.entities.Product;
 import org.example.code.entities.User;
@@ -24,6 +25,8 @@ public class UserService {
     private final ProductRepository productRepository;
 
     private final BankCardRepository bankCardRepository;
+
+    private final CacheConfig.CustomCache customCache;
 
     @Transactional
     public ResponseEntity<User> addProductToUser(Long userId, Long productId) {
@@ -108,5 +111,19 @@ public class UserService {
     public ResponseEntity<User> removeCard(Long id) {
         bankCardRepository.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<Product> getProductById(Long userId, Long productId) {
+
+        if (customCache.containsKey(productId.toString())) {
+            return new ResponseEntity<>((Product)customCache.getFromCache(productId.toString()), HttpStatus.OK);
+        }
+
+        else {
+            Product product = userRepository.findUserByIdAndProductId(userId, productId);
+            customCache.addToCache(product.getId().toString(), product);
+            return product == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                    new ResponseEntity<>(product, HttpStatus.CREATED);
+        }
     }
 }

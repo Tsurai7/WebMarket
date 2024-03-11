@@ -3,8 +3,6 @@ package org.example.code.services;
 import lombok.AllArgsConstructor;
 import org.example.code.entities.Product;
 import org.example.code.repositories.ProductRepository;
-import org.example.code.repositories.UserRepository;
-import org.example.code.utils.CustomCache;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,16 +15,11 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final CustomCache customCache;
 
     public ResponseEntity<List<Product>> getAll() {
         List<Product> products = productRepository.findAll();
 
         return new ResponseEntity<>(products, HttpStatus.OK);
-    }
-
-    public ResponseEntity<List<Product>> getAllAdvanced(String category) {
-        return new ResponseEntity<>(productRepository.findByCustomQuery(category), HttpStatus.OK);
     }
 
     public ResponseEntity<Product> getById(Long id) {

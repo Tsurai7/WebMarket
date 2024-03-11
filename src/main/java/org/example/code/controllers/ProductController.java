@@ -21,11 +21,6 @@ public class ProductController
         return productService.getAll();
     }
 
-    @GetMapping("/getAll/advanced")
-    public ResponseEntity<List<Product>> getAllAvanced(@RequestParam String category) {
-        return productService.getAllAdvanced(category);
-    }
-
     @GetMapping("/getById")
     public ResponseEntity<Product> getById(@RequestParam Long id) {
             return productService.getById(id);

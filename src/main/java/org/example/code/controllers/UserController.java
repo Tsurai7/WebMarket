@@ -2,6 +2,7 @@ package org.example.code.controllers;
 
 import lombok.AllArgsConstructor;
 import org.example.code.entities.BankCard;
+import org.example.code.entities.Product;
 import org.example.code.entities.User;
 import org.example.code.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,12 @@ public class UserController {
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
+
+    @GetMapping("/getProductById")
+    public ResponseEntity<Product> getProductById(@RequestParam Long userId, @RequestParam Long productId) {
+        return userService.getProductById(userId, productId);
+    }
+
 
     @GetMapping("/getById")
     public User getById(@RequestParam Long id) {
