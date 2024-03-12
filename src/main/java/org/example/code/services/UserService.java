@@ -11,7 +11,9 @@ import org.example.code.repositories.UserRepository;
 import org.example.code.utilities.CustomCache;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Service
@@ -75,13 +77,36 @@ public class UserService {
         return false;
     }
 
+    public boolean removeCard(Long userId, Long cardId) {
+        User user = userRepository.findById(userId).orElse(null);
+        BankCard card = bankCardRepository.findById(cardId).orElse(null);
+
+        if (user != null  && card != null) {
+            user.removeCard(card);
+            bankCardRepository.delete(card);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public Set<BankCard> getMyCards(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+
+        if (user != null) {
+            return user.getBankCards();
+        }
+
+        return new HashSet<>();
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     public User getById(Long id) {
-        return userRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("Not found"));
+        return userRepository.findById(id).orElse(null);
     }
 
     public boolean register(User user) {
@@ -115,8 +140,7 @@ public class UserService {
                         u.setPassword(user.getPassword());
                         return userRepository.save(u);
                 })
-                .orElseThrow(() ->
-                        new IllegalArgumentException("User not found"));
+                .orElse(null);
     }
 
     public boolean delete(Long id) {
@@ -129,11 +153,6 @@ public class UserService {
         user.removeAllProducts();
         userRepository.deleteById(id);
 
-        return true;
-    }
-
-    public boolean removeCard(Long id) {
-        bankCardRepository.deleteById(id);
         return true;
     }
 

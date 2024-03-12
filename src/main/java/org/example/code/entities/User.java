@@ -53,7 +53,7 @@ public class User {
     }
 
     public void removeProduct(Product product) {
-        products.removeAll(Collections.singleton(product));
+        products.remove(product);
         product.getUsers().remove(this);
     }
 

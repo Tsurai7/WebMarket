@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @AllArgsConstructor
@@ -37,9 +38,15 @@ public class UserController {
     }
 
     @DeleteMapping("/removeCard")
-    public ResponseEntity<User> removeCard(@RequestParam Long id) {
-       return userService.removeCard(id) ? new ResponseEntity<>(HttpStatus.OK) :
+    public ResponseEntity<User> removeCard(@RequestParam Long userId, @RequestParam Long cardId) {
+       return userService.removeCard(userId, cardId) ? new ResponseEntity<>(HttpStatus.OK) :
                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/getMyCards")
+    public ResponseEntity<Set<BankCard>> getMyCards(@RequestParam Long userId) {
+        return new ResponseEntity<>(userService.getMyCards(userId), HttpStatus.OK);
+
     }
 
     @GetMapping("/getAll")

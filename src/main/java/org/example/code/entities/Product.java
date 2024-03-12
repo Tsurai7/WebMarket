@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ public class Product {
 
     @PreRemove
     public void removeAllUsers() {
-        users.forEach(user -> user.removeProduct(this));
+        users.forEach(user -> user.getProducts().removeAll(Collections.singleton(this)));
     }
 }
 
