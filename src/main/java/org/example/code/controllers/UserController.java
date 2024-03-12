@@ -5,6 +5,7 @@ import org.example.code.entities.BankCard;
 import org.example.code.entities.Product;
 import org.example.code.entities.User;
 import org.example.code.services.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,27 +20,36 @@ public class UserController {
 
     @PostMapping("/addProduct")
     public ResponseEntity<User> addProductToUser(@RequestParam Long userId, @RequestParam Long productId) {
-        return userService.addProductToUser(userId, productId);
+        return userService.addProductToUser(userId, productId) ? new ResponseEntity<>(HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/removeProduct")
+    public ResponseEntity<User> removeProductFromCart(@RequestParam Long userId, @RequestParam Long productId) {
+        return userService.removeProductFromUser(userId, productId) ? new ResponseEntity<>(HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping("/addCard")
     public ResponseEntity<User> addCard(@RequestParam Long userId, @RequestBody BankCard card) {
-        return userService.addCard(userId, card);
+        return userService.addCard(userId, card) ? new ResponseEntity<>(HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/removeCard")
     public ResponseEntity<User> removeCard(@RequestParam Long id) {
-        return userService.removeCard(id);
+       return userService.removeCard(id) ? new ResponseEntity<>(HttpStatus.OK) :
+               new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/getAll")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/getProductById")
     public ResponseEntity<Product> getProductById(@RequestParam Long userId, @RequestParam Long productId) {
-        return userService.getProductById(userId, productId);
+        return new ResponseEntity<>(userService.getProductById(userId, productId), HttpStatus.OK);
     }
 
     @GetMapping("/getById")
@@ -53,17 +63,19 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return userService.register(user);
+    public ResponseEntity<User> register(@RequestBody User user) {
+        return userService.register(user) ? new ResponseEntity<>(HttpStatus.CREATED) :
+            new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/update")
-    public User update(@RequestParam Long id, @RequestBody User user) {
-        return userService.update(id, user);
+    public ResponseEntity<User> update(@RequestParam Long id, @RequestBody User user) {
+        return new ResponseEntity<>(userService.update(id, user), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<User> delete(@RequestParam Long id) {
-        return userService.delete(id);
+        return userService.delete(id) ? new ResponseEntity<>(HttpStatus.OK) :
+            new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

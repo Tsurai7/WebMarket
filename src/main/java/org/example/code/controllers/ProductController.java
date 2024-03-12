@@ -2,6 +2,7 @@ package org.example.code.controllers;
 
 import lombok.AllArgsConstructor;
 import org.example.code.entities.Product;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.example.code.services.ProductService;
@@ -18,26 +19,29 @@ public class ProductController
 
     @GetMapping("/getAll")
     public ResponseEntity<List<Product>> getAll() {
-        return productService.getAll();
+        return new ResponseEntity<>(productService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/getById")
     public ResponseEntity<Product> getById(@RequestParam Long id) {
-            return productService.getById(id);
+            return new ResponseEntity<>(productService.getById(id), HttpStatus.OK);
     }
 
     @PostMapping("/create")
     public ResponseEntity<Product> create(@RequestBody Product product) {
-        return productService.create(product);
+        return new ResponseEntity<>(productService.create(product), HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
     public ResponseEntity<Product> update(@RequestParam Long id, @RequestBody Product product) {
-        return productService.update(id, product);
+        return productService.update(id, product) ? new ResponseEntity<>(HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<Product> delete(@RequestParam Long id) {
-        return productService.delete(id);
+        return productService.delete(id) ? new ResponseEntity<>(HttpStatus.OK) :
+                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 }

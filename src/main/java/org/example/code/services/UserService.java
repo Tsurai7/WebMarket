@@ -9,8 +9,6 @@ import org.example.code.repositories.BankCardRepository;
 import org.example.code.repositories.ProductRepository;
 import org.example.code.repositories.UserRepository;
 import org.example.code.utilities.CustomCache;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,43 +27,53 @@ public class UserService {
     private final CustomCache customCache;
 
     @Transactional
-    public ResponseEntity<User> addProductToUser(Long userId, Long productId) {
+    public boolean addProductToUser(Long userId, Long productId) {
 
         User user = userRepository.findById(userId).orElse(null);
-
-        if (user != null && customCache.containsKey(productId.toString())) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        }
 
         Product product = productRepository.findById(productId).orElse(null);
 
         if (user != null && product != null) {
             user.addProduct(product);
-            customCache.addToCache(product.getId().toString(), product);
             userRepository.save(user);
 
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            return true;
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return false;
     }
 
-    public ResponseEntity<User> addCard(Long userId, BankCard card) {
+    @Transactional
+    public boolean removeProductFromUser(Long userId, Long productId) {
+
+        User user = userRepository.findById(userId).orElse(null);
+
+        Product product = productRepository.findById(productId).orElse(null);
+
+        if (user != null && product != null) {
+            user.removeProduct(product);
+            userRepository.save(user);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean addCard(Long userId, BankCard card) {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user != null) {
             bankCardRepository.save(card);
             user.addCard(card);
 
-            customCache.addToCache(card.getId().toString(), card);
             userRepository.save(user);
 
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            return true;
         }
 
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return false;
     }
-
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -76,14 +84,16 @@ public class UserService {
                 new IllegalArgumentException("Not found"));
     }
 
-    public User register(User user) {
+    public boolean register(User user) {
         if (userRepository.existsByName(user.getName())) {
             throw new IllegalArgumentException("Username is already taken");
         }
 
         User userInDb = new User(user.getName(), user.getPassword());
 
-        return userRepository.save(userInDb);
+        userRepository.save(userInDb);
+
+        return true;
     }
 
     public User login(User user) {
@@ -109,38 +119,39 @@ public class UserService {
                         new IllegalArgumentException("User not found"));
     }
 
-    public ResponseEntity<User> delete(Long id) {
+    public boolean delete(Long id) {
         User user = userRepository.findById(id).orElse(null);
 
         if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return false;
         }
+
         user.removeAllProducts();
         userRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+        return true;
     }
 
-    public ResponseEntity<User> removeCard(Long id) {
+    public boolean removeCard(Long id) {
         bankCardRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return true;
     }
 
-    public ResponseEntity<Product> getProductById(Long userId, Long productId) {
+    public Product getProductById(Long userId, Long productId) {
 
-        if (customCache.containsKey(productId.toString())) {
-            return new ResponseEntity<>((Product)customCache.getFromCache(productId.toString()), HttpStatus.OK);
+        if (userRepository.findById(userId).isPresent() && customCache.containsKey(productId.toString())) {
+            return ((Product)customCache.getFromCache(productId.toString()));
         }
 
         else {
             Product product = userRepository.findUserByIdAndProductId(userId, productId);
 
             if (product == null) {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return null;
             }
 
             customCache.addToCache(product.getId().toString(), product);
-            return product == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) :
-                    new ResponseEntity<>(product, HttpStatus.CREATED);
+            return product;
         }
     }
 }

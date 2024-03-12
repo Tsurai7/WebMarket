@@ -13,7 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
     void deleteById(Long id);
     boolean existsByName(String name);
-
     @Query("SELECT p FROM User u JOIN u.products p WHERE u.id = :userId AND p.id = :productId")
     Product findUserByIdAndProductId(@Param("userId") Long userId, @Param("productId") Long productId);
 }

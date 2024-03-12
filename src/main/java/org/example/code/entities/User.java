@@ -1,15 +1,11 @@
 package org.example.code.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Getter
@@ -56,9 +52,8 @@ public class User {
         bankCards.forEach(card -> card.setHolder(null));
     }
 
-
     public void removeProduct(Product product) {
-        products.remove(product);
+        products.removeAll(Collections.singleton(product));
         product.getUsers().remove(this);
     }
 

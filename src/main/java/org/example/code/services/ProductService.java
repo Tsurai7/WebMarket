@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import org.example.code.entities.Product;
 import org.example.code.repositories.ProductRepository;
 import org.example.code.utilities.CustomCache;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,34 +17,19 @@ public class ProductService {
 
     private final CustomCache customCache;
 
-    public ResponseEntity<List<Product>> getAll() {
-        List<Product> products = productRepository.findAll();
-
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public List<Product> getAll() {
+        return productRepository.findAll();
     }
 
-    public ResponseEntity<Product> getById(Long id) {
-
-        Product product = productRepository.findById(id).orElse(null);
-
-        if (product != null) {
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        }
-
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public Product getById(Long id) {
+        return productRepository.findById(id).orElse(null);
     }
 
-    public ResponseEntity<Product> create(Product product) {
-
-        Product createdProduct = productRepository.save(product);
-        customCache.addToCache(createdProduct.getId().toString(), createdProduct);
-
-        return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
+    public Product create(Product product) {
+        return productRepository.save(product);
     }
 
-    public ResponseEntity<Product> update(Long id, Product updatedProduct) {
+    public boolean update(Long id, Product updatedProduct) {
 
         Product existingProduct = productRepository.findById(id).orElse(null);
 
@@ -56,22 +39,24 @@ public class ProductService {
 
             Product updatedProductResult = productRepository.save(existingProduct);
             customCache.addToCache(updatedProductResult.getId().toString(), updatedProductResult);
-            return new ResponseEntity<>(updatedProductResult, HttpStatus.OK);
+
+            return true;
         }
 
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return false;
     }
 
-    public ResponseEntity<Product> delete(Long id) {
+    public boolean delete(Long id) {
         Product productToDelete = productRepository.findById(id).orElse(null);
 
         if (productToDelete != null) {
             productRepository.delete(productToDelete);
-            return new ResponseEntity<>(productToDelete, HttpStatus.OK);
+
+            return true;
         }
 
         else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return false;
         }
     }
 }
