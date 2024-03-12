@@ -3,6 +3,7 @@ package org.example.code.services;
 import lombok.AllArgsConstructor;
 import org.example.code.entities.Product;
 import org.example.code.repositories.ProductRepository;
+import org.example.code.utilities.CustomCache;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+
+    private final CustomCache customCache;
 
     public ResponseEntity<List<Product>> getAll() {
         List<Product> products = productRepository.findAll();
@@ -38,6 +41,7 @@ public class ProductService {
     public ResponseEntity<Product> create(Product product) {
 
         Product createdProduct = productRepository.save(product);
+        customCache.addToCache(createdProduct.getId().toString(), createdProduct);
 
         return new ResponseEntity<>(createdProduct, HttpStatus.CREATED);
     }
@@ -51,7 +55,7 @@ public class ProductService {
             existingProduct.setDescription(updatedProduct.getDescription());
 
             Product updatedProductResult = productRepository.save(existingProduct);
-
+            customCache.addToCache(updatedProductResult.getId().toString(), updatedProductResult);
             return new ResponseEntity<>(updatedProductResult, HttpStatus.OK);
         }
 

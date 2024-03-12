@@ -2,13 +2,13 @@ package org.example.code.services;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.example.code.config.CacheConfig;
 import org.example.code.entities.BankCard;
 import org.example.code.entities.Product;
 import org.example.code.entities.User;
 import org.example.code.repositories.BankCardRepository;
 import org.example.code.repositories.ProductRepository;
 import org.example.code.repositories.UserRepository;
+import org.example.code.utilities.CustomCache;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,16 +26,22 @@ public class UserService {
 
     private final BankCardRepository bankCardRepository;
 
-    private final CacheConfig.CustomCache customCache;
+    private final CustomCache customCache;
 
     @Transactional
     public ResponseEntity<User> addProductToUser(Long userId, Long productId) {
 
         User user = userRepository.findById(userId).orElse(null);
+
+        if (user != null && customCache.containsKey(productId.toString())) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+
         Product product = productRepository.findById(productId).orElse(null);
 
         if (user != null && product != null) {
             user.addProduct(product);
+            customCache.addToCache(product.getId().toString(), product);
             userRepository.save(user);
 
             return new ResponseEntity<>(user, HttpStatus.OK);
@@ -50,6 +56,8 @@ public class UserService {
         if (user != null) {
             bankCardRepository.save(card);
             user.addCard(card);
+
+            customCache.addToCache(card.getId().toString(), card);
             userRepository.save(user);
 
             return new ResponseEntity<>(user, HttpStatus.OK);
@@ -125,6 +133,11 @@ public class UserService {
 
         else {
             Product product = userRepository.findUserByIdAndProductId(userId, productId);
+
+            if (product == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
             customCache.addToCache(product.getId().toString(), product);
             return product == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) :
                     new ResponseEntity<>(product, HttpStatus.CREATED);
