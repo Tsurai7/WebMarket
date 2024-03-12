@@ -42,7 +42,6 @@ public class UserController {
         return userService.getProductById(userId, productId);
     }
 
-
     @GetMapping("/getById")
     public User getById(@RequestParam Long id) {
         return userService.getById(id);
@@ -64,7 +63,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete")
-    public void delete(@RequestParam Long id) {
-        userService.delete(id);
+    public ResponseEntity<User> delete(@RequestParam Long id) {
+        return userService.delete(id);
     }
 }

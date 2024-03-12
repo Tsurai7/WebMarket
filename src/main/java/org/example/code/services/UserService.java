@@ -101,11 +101,15 @@ public class UserService {
                         new IllegalArgumentException("User not found"));
     }
 
-    public void delete(Long id) {
+    public ResponseEntity<User> delete(Long id) {
         User user = userRepository.findById(id).orElse(null);
-        user.removeAllProducts();
 
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        user.removeAllProducts();
         userRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     public ResponseEntity<User> removeCard(Long id) {
