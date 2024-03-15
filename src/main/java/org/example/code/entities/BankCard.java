@@ -20,7 +20,11 @@ public class BankCard {
     @JsonBackReference
     private User holder;
 
-    private String  number;
+    private String owner = "";
+
+    private String  number = "";
+
+    private String expirationDate = "";
 
     private int cvc;
 

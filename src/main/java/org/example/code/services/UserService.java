@@ -2,18 +2,14 @@ package org.example.code.services;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.example.code.entities.BankCard;
 import org.example.code.entities.Product;
 import org.example.code.entities.User;
-import org.example.code.repositories.BankCardRepository;
 import org.example.code.repositories.ProductRepository;
 import org.example.code.repositories.UserRepository;
 import org.example.code.utilities.CustomCache;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 @Service
@@ -23,8 +19,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final ProductRepository productRepository;
-
-    private final BankCardRepository bankCardRepository;
 
     private final CustomCache customCache;
 
@@ -62,44 +56,6 @@ public class UserService {
         return false;
     }
 
-    public boolean addCard(Long userId, BankCard card) {
-        User user = userRepository.findById(userId).orElse(null);
-
-        if (user != null) {
-
-            BankCard existingCard = bankCardRepository.findByCardNumber(card.getNumber());
-
-            if (existingCard != null) {
-                // Если карта с таким номером уже существует, не добавляем ее
-                return false;
-            }
-
-
-            bankCardRepository.save(card);
-            user.addCard(card);
-
-            userRepository.save(user);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean removeCard(Long userId, Long cardId) {
-        User user = userRepository.findById(userId).orElse(null);
-        BankCard card = bankCardRepository.findById(cardId).orElse(null);
-
-        if (user != null  && card != null) {
-            user.removeCard(card);
-            bankCardRepository.delete(card);
-
-            return true;
-        }
-
-        return false;
-    }
-
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -109,8 +65,9 @@ public class UserService {
     }
 
     public boolean register(User user) {
+
         if (userRepository.existsByName(user.getName())) {
-            throw new IllegalArgumentException("Username is already taken");
+            return false;
         }
 
         User userInDb = new User(user.getName(), user.getPassword());
@@ -118,19 +75,6 @@ public class UserService {
         userRepository.save(userInDb);
 
         return true;
-    }
-
-    public User login(User user) {
-        User userInDb = userRepository.findByName(user.getName())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        if (user.getPassword().equals(userInDb.getPassword())) {
-            return userInDb;
-        }
-
-        else {
-            throw new IllegalArgumentException("Invalid password");
-        }
     }
 
     public User update(Long id, User user) {

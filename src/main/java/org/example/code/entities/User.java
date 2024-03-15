@@ -48,15 +48,12 @@ public class User {
         card.setHolder(null);
     }
 
-    public void removeAllCards() {
-        bankCards.forEach(card -> card.setHolder(null));
-    }
-
     public void removeProduct(Product product) {
         products.remove(product);
         product.getUsers().remove(this);
     }
 
+    @PreRemove
     public void removeAllProducts() {
         products.forEach(product -> product.removeUser(this));
     }

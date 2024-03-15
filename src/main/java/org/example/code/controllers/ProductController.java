@@ -35,13 +35,13 @@ public class ProductController
     @PutMapping("/update")
     public ResponseEntity<Product> update(@RequestParam Long id, @RequestBody Product product) {
         return productService.update(id, product) ? new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<Product> delete(@RequestParam Long id) {
         return productService.delete(id) ? new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
     }
 }

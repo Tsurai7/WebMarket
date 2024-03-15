@@ -30,18 +30,6 @@ public class UserController {
                 new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/addCard")
-    public ResponseEntity<User> addCard(@RequestParam Long userId, @RequestBody BankCard card) {
-        return userService.addCard(userId, card) ? new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @DeleteMapping("/removeCard")
-    public ResponseEntity<User> removeCard(@RequestParam Long userId, @RequestParam Long cardId) {
-       return userService.removeCard(userId, cardId) ? new ResponseEntity<>(HttpStatus.OK) :
-               new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-    }
-
     @GetMapping("/getAll")
     public ResponseEntity<List<User>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
@@ -57,15 +45,10 @@ public class UserController {
         return userService.getById(id);
     }
 
-    @GetMapping("/login")
-    public User login(@RequestBody User user) {
-        return userService.login(user);
-    }
-
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
         return userService.register(user) ? new ResponseEntity<>(HttpStatus.CREATED) :
-            new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/update")
@@ -76,6 +59,6 @@ public class UserController {
     @DeleteMapping("/delete")
     public ResponseEntity<User> delete(@RequestParam Long id) {
         return userService.delete(id) ? new ResponseEntity<>(HttpStatus.OK) :
-            new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
