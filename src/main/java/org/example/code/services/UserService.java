@@ -66,6 +66,15 @@ public class UserService {
         User user = userRepository.findById(userId).orElse(null);
 
         if (user != null) {
+
+            BankCard existingCard = bankCardRepository.findByCardNumber(card.getNumber());
+
+            if (existingCard != null) {
+                // Если карта с таким номером уже существует, не добавляем ее
+                return false;
+            }
+
+
             bankCardRepository.save(card);
             user.addCard(card);
 
