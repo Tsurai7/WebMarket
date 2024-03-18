@@ -19,6 +19,10 @@ public class BankCardService {
 
     private final BankCardRepository bankCardRepository;
 
+    private static final String USER_NOT_FOUND_MESSAGE = "User not found with id: %d";
+
+    private static final String CARD_NOT_FOUND_MESSAGE = "Card not found with id: %d";
+
     @Autowired
     public BankCardService(UserRepository userRepository, BankCardRepository bankCardRepository) {
         this.userRepository = userRepository;
@@ -27,8 +31,8 @@ public class BankCardService {
 
     public void addCard(Long userId, BankCard card) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
-            logger.error("User not found with id: {}", userId);
-            throw  new NoSuchElementException("User not found with id: " + userId);
+            logger.error(String.format(USER_NOT_FOUND_MESSAGE, userId));
+            throw  new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId));
         });
 
         bankCardRepository.save(card);
@@ -39,13 +43,13 @@ public class BankCardService {
 
     public void removeCard(Long userId, Long cardId) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
-            logger.error("Card not found with id: {}", userId);
-            throw  new NoSuchElementException("Card not found with id: " + userId);
+            logger.error(String.format(USER_NOT_FOUND_MESSAGE, userId));
+            throw  new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId));
         });
 
         BankCard card = bankCardRepository.findById(cardId).orElseThrow(() -> {
-            logger.error("Card not found with id: {}", cardId);
-            throw  new NoSuchElementException("Card not found with id: " + cardId);
+            logger.error(String.format(CARD_NOT_FOUND_MESSAGE, cardId));
+            throw new NoSuchElementException(String.format(CARD_NOT_FOUND_MESSAGE, cardId));
         });
 
         user.removeCard(card);
@@ -54,8 +58,8 @@ public class BankCardService {
 
     public BankCard updateCard(Long id, BankCard card) {
         BankCard cardInDb = bankCardRepository.findById(id).orElseThrow(() -> {
-            logger.error("Card not found with id: {}", id);
-            throw  new NoSuchElementException("Card not found with id: " + id);
+            logger.error(String.format(CARD_NOT_FOUND_MESSAGE, id));
+            throw  new NoSuchElementException(String.format(CARD_NOT_FOUND_MESSAGE, id));
         });
 
         cardInDb.setOwner(card.getOwner());

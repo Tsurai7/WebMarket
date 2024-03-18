@@ -26,6 +26,10 @@ public class UserService {
 
     private final CustomCache customCache;
 
+    private static final String USER_NOT_FOUND_MESSAGE = "User not found with id: %d";
+
+    private static final String PRODUCT_NOT_FOUND_MESSAGE = "Product not found with id: %d";
+
     @Autowired
     public UserService(UserRepository userRepository, ProductRepository productRepository,
                        CustomCache customCache) {
@@ -38,13 +42,13 @@ public class UserService {
     public void addProductToUser(Long userId, Long productId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> {
-            logger.error("User not found with id: {}", userId);
-            throw new NoSuchElementException("User not found with id: " + userId);
+            logger.error(String.format(USER_NOT_FOUND_MESSAGE, userId));
+            throw  new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId));
         });
 
         Product product = productRepository.findById(productId).orElseThrow(() -> {
-            logger.error("Product not found with id: {}", userId);
-            throw new NoSuchElementException("Product not found with id: " + userId);
+            logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, productId));
+            throw  new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, productId));
         });
 
         user.addProduct(product);
@@ -55,13 +59,13 @@ public class UserService {
     public void removeProductFromUser(Long userId, Long productId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> {
-            logger.error("User not found with id: {}", userId);
-            throw new NoSuchElementException("User not found with id: " + userId);
+            logger.error(String.format(USER_NOT_FOUND_MESSAGE, userId));
+            throw  new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId));
         });
 
         Product product = productRepository.findById(productId).orElseThrow(() -> {
-            logger.error("Product not found with id: {}", productId);
-            throw new NoSuchElementException("Product not found with id: " + productId);
+            logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, productId));
+            throw  new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, productId));
         });
 
         user.removeProduct(product);
@@ -74,10 +78,10 @@ public class UserService {
 
     public User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> {
-                    logger.error("User not found with id: {}", id);
-                    throw new NoSuchElementException("User not found with id: " + id);
-                });
+        .orElseThrow(() -> {
+            logger.error(String.format(USER_NOT_FOUND_MESSAGE, id));
+            throw  new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
+        });
     }
 
     public boolean register(User user) {
@@ -97,16 +101,16 @@ public class UserService {
             u.setPassword(user.getPassword());
 
             return userRepository.save(u);
-        }).orElseThrow(() -> {
-            logger.error("User not found with id: {}", id);
-            throw new NoSuchElementException("User not found with id: " + id);
-        });
+            }).orElseThrow(() -> {
+            logger.error(String.format(USER_NOT_FOUND_MESSAGE, id));
+            throw  new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
+            });
     }
 
     public void delete(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> {
-            logger.error("User not found with id: {}", id);
-            throw new NoSuchElementException("User not found with id: " + id);
+            logger.error(String.format(USER_NOT_FOUND_MESSAGE, id));
+            throw  new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         });
 
         user.removeAllProducts();

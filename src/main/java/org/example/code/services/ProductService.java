@@ -20,6 +20,8 @@ public class ProductService {
 
     private final CustomCache customCache;
 
+    private static final String PRODUCT_NOT_FOUND_MESSAGE = "Product not found with id: %d";
+
     @Autowired
     public ProductService(ProductRepository productRepository, CustomCache customCache) {
         this.productRepository = productRepository;
@@ -33,8 +35,8 @@ public class ProductService {
 
     public Product getById(Long id) {
         return productRepository.findById(id).orElseThrow(() -> {
-            logger.error("Product not found with id: {}", id);
-            throw  new NoSuchElementException("Product not found with id: " + id);
+            logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
+            throw  new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
         });
     }
 
@@ -46,8 +48,8 @@ public class ProductService {
 
     public void update(Long id, Product updatedProduct) {
         Product existingProduct = productRepository.findById(id).orElseThrow(() -> {
-            logger.error("Product not found with id: {}", id);
-            throw new NoSuchElementException("Product not found with id: " + id);
+            logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
+            throw  new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
         });
 
         existingProduct.setTitle(updatedProduct.getTitle());
@@ -60,8 +62,8 @@ public class ProductService {
 
     public void delete(Long id) {
         Product productToDelete = productRepository.findById(id).orElseThrow(() -> {
-            logger.error("Product not found with id: {}", id);
-            throw new NoSuchElementException("Product not found with id: " + id);
+            logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
+            throw  new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
         });
 
         productRepository.delete(productToDelete);
