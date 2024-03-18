@@ -5,9 +5,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class StockMarketApplication
+public class WebMarket
 {
 	public static void main(String[] args) {
-		SpringApplication.run(StockMarketApplication.class, args);
+		SpringApplication.run(WebMarket.class, args);
 	}
 }

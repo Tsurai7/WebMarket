@@ -17,16 +17,16 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/addProduct")
+    @PatchMapping("/addProduct")
     public ResponseEntity<User> addProductToUser(@RequestParam Long userId, @RequestParam Long productId) {
         return userService.addProductToUser(userId, productId) ? new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/removeProduct")
     public ResponseEntity<User> removeProductFromCart(@RequestParam Long userId, @RequestParam Long productId) {
         return userService.removeProductFromUser(userId, productId) ? new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/getAll")
@@ -34,9 +34,10 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
-    @GetMapping("/getProductById")
-    public ResponseEntity<Product> getProductById(@RequestParam Long userId, @RequestParam Long productId) {
-        return new ResponseEntity<>(userService.getProductById(userId, productId), HttpStatus.OK);
+    @GetMapping("/getProductByTitle")
+    public ResponseEntity<Product> getProductByTitle(@RequestParam Long userId, @RequestParam String title) {
+        return userService.getProductById(userId, title) == null ? new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(userService.getProductById(userId, title), HttpStatus.OK);
     }
 
     @GetMapping("/getById")

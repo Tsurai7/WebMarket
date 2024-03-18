@@ -28,8 +28,10 @@ public class BankCard {
 
     private int cvc;
 
-    public BankCard(String number, int cvc) {
+    public BankCard(String owner, String number, String expirationDate, int cvc) {
+        this.owner = owner;
         this.number = number;
+        this.expirationDate = expirationDate;
         this.cvc = cvc;
     }
 

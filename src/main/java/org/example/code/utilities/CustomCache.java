@@ -13,6 +13,10 @@ public class CustomCache {
         cacheMap.put(key, value);
     }
 
+    public void removeFromCache(String key) {
+        cacheMap.remove(key);
+    }
+
     public Object getFromCache(String key) {
         return cacheMap.get(key);
     }

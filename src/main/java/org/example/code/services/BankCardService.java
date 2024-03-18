@@ -39,6 +39,7 @@ public class BankCardService {
     }
 
     public boolean removeCard(Long userId, Long cardId) {
+
         User user = userRepository.findById(userId).orElse(null);
         BankCard card = bankCardRepository.findById(cardId).orElse(null);
 

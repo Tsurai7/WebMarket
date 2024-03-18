@@ -1,4 +1,4 @@
-package org.example.code;
+package org.example.code.utilities;
 
 import lombok.AllArgsConstructor;
 import org.example.code.entities.BankCard;
@@ -33,7 +33,7 @@ public class DataLoader implements CommandLineRunner {
         john.addProduct(laptop);
         userRepository.save(john);
 
-        BankCard johnsCard = new BankCard("1233131", 737);
+        BankCard johnsCard = new BankCard("John", "1233131", "08/24", 737);
         johnsCard.setHolder(john);
         bankCardRepository.save(johnsCard);
     }

@@ -1,4 +1,4 @@
-package org.example.code.config;
+package org.example.code.configurations;
 
 import org.example.code.utilities.CustomCache;
 import org.springframework.context.annotation.Bean;

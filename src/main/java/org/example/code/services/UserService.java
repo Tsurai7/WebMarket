@@ -99,14 +99,14 @@ public class UserService {
         return true;
     }
 
-    public Product getProductById(Long userId, Long productId) {
+    public Product getProductById(Long userId, String title) {
 
-        if (userRepository.findById(userId).isPresent() && customCache.containsKey(productId.toString())) {
-            return ((Product)customCache.getFromCache(productId.toString()));
+        if (userRepository.findById(userId).isPresent() && customCache.containsKey(title)) {
+            return ((Product)customCache.getFromCache(title));
         }
 
-        else {
-            Product product = userRepository.findUserByIdAndProductId(userId, productId);
+        else if (userRepository.findById(userId).isPresent()){
+            Product product = userRepository.findUserByIdAndProductName(userId, title);
 
             if (product == null) {
                 return null;
@@ -114,6 +114,13 @@ public class UserService {
 
             customCache.addToCache(product.getId().toString(), product);
             return product;
+        }
+        else {
+
+            if (customCache.containsKey(title)) {
+                customCache.removeFromCache(title);
+            }
+            return null;
         }
     }
 }
