@@ -1,102 +1,116 @@
 package org.example.code.services;
 
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import org.example.code.entities.Product;
 import org.example.code.entities.User;
 import org.example.code.repositories.ProductRepository;
 import org.example.code.repositories.UserRepository;
 import org.example.code.utilities.CustomCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Service
-@AllArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
 
     private final ProductRepository productRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+
     private final CustomCache customCache;
 
-    @Transactional
-    public boolean addProductToUser(Long userId, Long productId) {
-
-        User user = userRepository.findById(userId).orElse(null);
-
-        Product product = productRepository.findById(productId).orElse(null);
-
-        if (user != null && product != null) {
-            user.addProduct(product);
-            userRepository.save(user);
-
-            return true;
-        }
-
-        return false;
+    @Autowired
+    public UserService(UserRepository userRepository, ProductRepository productRepository,
+                       CustomCache customCache) {
+        this.userRepository = userRepository;
+        this.productRepository = productRepository;
+        this.customCache = customCache;
     }
 
     @Transactional
-    public boolean removeProductFromUser(Long userId, Long productId) {
+    public void addProductToUser(Long userId, Long productId) {
 
-        User user = userRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            logger.error("User not found with id: {}", userId);
+            throw new NoSuchElementException("User not found with id: " + userId);
+        });
 
-        Product product = productRepository.findById(productId).orElse(null);
+        Product product = productRepository.findById(productId).orElseThrow(() -> {
+            logger.error("Product not found with id: {}", userId);
+            throw new NoSuchElementException("Product not found with id: " + userId);
+        });
 
-        if (user != null && product != null) {
-            user.removeProduct(product);
-            userRepository.save(user);
-
-            return true;
-        }
-
-        return false;
+        user.addProduct(product);
+        userRepository.save(user);
     }
 
-    public List<User> getAllUsers() {
+    @Transactional
+    public void removeProductFromUser(Long userId, Long productId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            logger.error("User not found with id: {}", userId);
+            throw new NoSuchElementException("User not found with id: " + userId);
+        });
+
+        Product product = productRepository.findById(productId).orElseThrow(() -> {
+            logger.error("Product not found with id: {}", productId);
+            throw new NoSuchElementException("Product not found with id: " + productId);
+        });
+
+        user.removeProduct(product);
+        userRepository.save(user);
+    }
+
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 
     public User getById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.error("User not found with id: {}", id);
+                    throw new NoSuchElementException("User not found with id: " + id);
+                });
     }
 
     public boolean register(User user) {
 
-        if (userRepository.existsByName(user.getName())) {
+        if (userRepository.findByName(user.getName())) {
             return false;
         }
 
         User userInDb = new User(user.getName(), user.getPassword());
-
         userRepository.save(userInDb);
-
         return true;
     }
 
     public User update(Long id, User user) {
         return userRepository.findById(id).map(u -> {
-                        u.setName(user.getName());
-                        u.setPassword(user.getPassword());
-                        return userRepository.save(u);
-                })
-                .orElse(null);
+            u.setName(user.getName());
+            u.setPassword(user.getPassword());
+
+            return userRepository.save(u);
+        }).orElseThrow(() -> {
+            logger.error("User not found with id: {}", id);
+            throw new NoSuchElementException("User not found with id: " + id);
+        });
     }
 
-    public boolean delete(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-
-        if (user == null) {
-            return false;
-        }
+    public void delete(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            logger.error("User not found with id: {}", id);
+            throw new NoSuchElementException("User not found with id: " + id);
+        });
 
         user.removeAllProducts();
         userRepository.deleteById(id);
-
-        return true;
     }
 
     public Product getProductById(Long userId, String title) {

@@ -1,34 +1,42 @@
 package org.example.code.controllers;
 
-import lombok.AllArgsConstructor;
 import org.example.code.entities.BankCard;
 import org.example.code.services.BankCardService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/api/cards")
 public class BankCardController {
+    private static final Logger logger = LoggerFactory.getLogger(BankCardController.class);
 
     private final BankCardService bankCardService;
 
-    @PostMapping("/addCard")
+    @Autowired public BankCardController(BankCardService bankCardService) {
+        this.bankCardService = bankCardService;
+    }
+
+    @PostMapping("/create")
     public ResponseEntity<BankCard> addCard(@RequestParam Long userId, @RequestBody BankCard card) {
-        return bankCardService.addCard(userId, card) ? new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        logger.info("Endpoint called: /api/cards/create");
+        bankCardService.addCard(userId, card);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/removeCard")
+    @DeleteMapping("/remove")
     public ResponseEntity<BankCard> removeCard(@RequestParam Long userId, @RequestParam Long cardId) {
-        return bankCardService.removeCard(userId, cardId) ? new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        logger.info("Endpoint called: /api/cards/remove");
+        bankCardService.removeCard(userId, cardId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/updateCard")
+    @PutMapping("/update")
     public ResponseEntity<BankCard> updateCard(@RequestParam Long cardId, @RequestBody BankCard card) {
-        return bankCardService.updateCard(cardId, card) ? new ResponseEntity<>(HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        logger.info("Endpoint called: /api/cards/update");
+        return new ResponseEntity<>(bankCardService.updateCard(cardId, card), HttpStatus.NO_CONTENT);
     }
 }
