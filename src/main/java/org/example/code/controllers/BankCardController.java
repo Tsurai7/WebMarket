@@ -2,7 +2,6 @@ package org.example.code.controllers;
 
 import lombok.AllArgsConstructor;
 import org.example.code.entities.BankCard;
-import org.example.code.entities.User;
 import org.example.code.services.BankCardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
