@@ -31,12 +31,12 @@ public class ProductService {
 
 
     public Product getById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> {
-            logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
-            throw  new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
-        });
+        return productRepository.findById(id)
+            .orElseThrow(() -> {
+                logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
+                return new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
+            });
     }
-
 
     public Product create(Product product) {
         return productRepository.save(product);
@@ -44,26 +44,27 @@ public class ProductService {
 
 
     public void update(Long id, Product updatedProduct) {
-
-        Product existingProduct = productRepository.findById(id).orElseThrow(() -> {
-            logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
-            throw  new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
-        });
-
-        existingProduct.setTitle(updatedProduct.getTitle());
-        existingProduct.setDescription(updatedProduct.getDescription());
-
-        Product updatedProductResult = productRepository.save(existingProduct);
+        productRepository.findById(id)
+            .map(existingProduct -> {
+                existingProduct.setTitle(updatedProduct.getTitle());
+                existingProduct.setDescription(updatedProduct.getDescription());
+                return productRepository.save(existingProduct);
+            })
+            .orElseThrow(() -> {
+                logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
+                return new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
+            });
     }
 
 
     public void delete(Long id) {
-
-        Product productToDelete = productRepository.findById(id).orElseThrow(() -> {
-            logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
-            throw  new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
-        });
-
-        productRepository.delete(productToDelete);
+        productRepository.findById(id)
+            .ifPresentOrElse(
+                productRepository::delete,
+                () -> {
+                    logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
+                    throw new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
+                }
+            );
     }
 }

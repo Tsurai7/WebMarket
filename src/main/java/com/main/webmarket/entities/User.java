@@ -44,6 +44,7 @@ public class User {
         this.password = password;
     }
 
+
     public void addProduct(Product product) {
         products.add(product);
         product.getUsers().add(this);
@@ -67,5 +68,9 @@ public class User {
     @PreRemove
     public void removeAllProducts() {
         products.forEach(product -> product.removeUser(this));
+    }
+
+    public void addProducts(List<Product> products) {
+        products.forEach(this::addProduct);
     }
 }
