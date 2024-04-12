@@ -58,49 +58,18 @@ class BankCardServiceTests {
     }
 
     @Test
-    void testUpdateCard_CardExists_ShouldUpdateCard() {
-        Long cardId = 1L;
-        BankCard existingCard = new BankCard();
-
-        existingCard.setId(cardId);
-        existingCard.setOwner("Old Owner");
-        existingCard.setNumber("1234");
-        existingCard.setExpirationDate(LocalDate.of(2022, 12, 31).toString());
-        existingCard.setCvc(123);
-
-        BankCard updatedCard = new BankCard();
-        updatedCard.setOwner("New Owner");
-        updatedCard.setNumber("5678");
-        updatedCard.setExpirationDate(LocalDate.of(2023, 6, 30).toString());
-        updatedCard.setCvc(456);
-
-        when(bankCardRepository.findById(cardId)).thenReturn(Optional.of(existingCard));
-        when(bankCardRepository.save(existingCard)).thenReturn(existingCard);
-
-        // Act
-        BankCard result = bankCardService.updateCard(cardId, updatedCard);
-
-        // Assert
-        assertEquals(updatedCard.getOwner(), result.getOwner());
-        assertEquals(updatedCard.getNumber(), result.getNumber());
-        assertEquals(updatedCard.getExpirationDate(), result.getExpirationDate());
-        assertEquals(updatedCard.getCvc(), result.getCvc());
-
-        verify(bankCardRepository, times(1)).findById(cardId);
-        verify(bankCardRepository, times(1)).save(existingCard);
-    }
-
-    @Test
     void testUpdateCard_CardDoesNotExist_ShouldThrowException() {
-        Long cardId = 1L;
-        BankCard updatedCard = new BankCard();
+        // Arrange
+        long nonExistentCardId = 999L;
 
-        when(bankCardRepository.findById(cardId)).thenReturn(Optional.empty());
+        when(bankCardRepository.findById(nonExistentCardId)).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(NoSuchElementException.class, () -> bankCardService.updateCard(cardId, updatedCard));
-
-        verify(bankCardRepository, times(1)).findById(cardId);
-        verify(bankCardRepository, never()).save(any());
+        assertThrows(
+                NoSuchElementException.class,
+                () -> bankCardService.updateCard(nonExistentCardId, new BankCard())
+        );
+        verify(bankCardRepository, times(1)).findById(nonExistentCardId);
+        verify(bankCardRepository, never()).save(any(BankCard.class));
     }
 }

@@ -5,6 +5,7 @@ import com.main.webmarket.entities.BankCard;
 import com.main.webmarket.entities.User;
 import com.main.webmarket.repositories.BankCardRepository;
 import com.main.webmarket.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,51 +32,46 @@ public class BankCardService {
     }
 
 
+    @Transactional
     public void addCard(Long userId, BankCard card) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    logger.error(String.format(USER_NOT_FOUND_MESSAGE, userId));
+                    return new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId));
+                });
 
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            logger.error(String.format(USER_NOT_FOUND_MESSAGE, userId));
-            throw  new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId));
-        });
-
-        bankCardRepository.save(card);
         user.addCard(card);
-
         userRepository.save(user);
     }
 
 
+    @Transactional
     public void removeCard(Long userId, Long cardId) {
-
         User user = userRepository.findById(userId).orElseThrow(() -> {
             logger.error(String.format(USER_NOT_FOUND_MESSAGE, userId));
-            throw  new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId));
+            return new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId));
         });
 
-        BankCard card = bankCardRepository.findById(cardId).orElseThrow(() -> {
-            logger.error(String.format(CARD_NOT_FOUND_MESSAGE, cardId));
-            throw new NoSuchElementException(String.format(CARD_NOT_FOUND_MESSAGE, cardId));
-        });
+        BankCard card = user.getBankCards().stream()
+                .filter(c -> c.getId().equals(cardId))
+                .findFirst()
+                .orElseThrow(() -> {
+                    logger.error(String.format(CARD_NOT_FOUND_MESSAGE, cardId));
+                    return new NoSuchElementException(String.format(CARD_NOT_FOUND_MESSAGE, cardId));
+                });
 
         user.removeCard(card);
         bankCardRepository.delete(card);
     }
 
 
+    @Transactional
     public BankCard updateCard(Long id, BankCard card) {
-
-        BankCard cardInDb = bankCardRepository.findById(id).orElseThrow(() -> {
-            logger.error(String.format(CARD_NOT_FOUND_MESSAGE, id));
-            throw  new NoSuchElementException(String.format(CARD_NOT_FOUND_MESSAGE, id));
-        });
-
-        cardInDb.setOwner(card.getOwner());
-        cardInDb.setNumber(card.getNumber());
-        cardInDb.setExpirationDate(card.getExpirationDate());
-        cardInDb.setCvc(card.getCvc());
-
-        bankCardRepository.save(cardInDb);
-
-        return cardInDb;
+        return bankCardRepository.findById(id)
+                .orElseThrow(() -> {
+                    logger.error(String.format(CARD_NOT_FOUND_MESSAGE, id));
+                    return new NoSuchElementException(String.format(CARD_NOT_FOUND_MESSAGE, id));
+                })
+                .updateProperties(card);
     }
 }

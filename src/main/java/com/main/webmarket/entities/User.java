@@ -69,4 +69,8 @@ public class User {
     public void removeAllProducts() {
         products.forEach(product -> product.removeUser(this));
     }
+
+    public void addProducts(List<Product> products) {
+        products.forEach(this::addProduct);
+    }
 }

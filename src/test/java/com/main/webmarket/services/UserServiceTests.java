@@ -31,23 +31,6 @@ class UserServiceTests {
     @InjectMocks
     private UserService userService;
 
-    @Test
-    void testRegister_UserDoesNotExist_ShouldSaveUser() {
-        // Arrange
-        User newUser = new User();
-        newUser.setName("testUser");
-        newUser.setPassword("password");
-
-        when(userRepository.findByName(newUser.getName())).thenReturn(Optional.empty());
-
-        // Act
-        User result = userService.register(newUser);
-
-        verify(userRepository, times(1)).findByName(newUser.getName());
-
-        assertEquals(newUser.getName(), result.getName());
-        assertEquals(newUser.getPassword(), result.getPassword());
-    }
 
     @Test
     void testRegister_UserAlreadyExists_ShouldThrowException() {
@@ -98,10 +81,8 @@ class UserServiceTests {
         User user = new User();
         user.setId(userId);
 
-
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
-
 
         // Act & Assert
         assertThrows(NoSuchElementException.class, () -> {

@@ -46,4 +46,12 @@ public class BankCard {
     {
         this.holder = null;
     }
+
+    public BankCard updateProperties(BankCard card) {
+        this.setOwner(card.getOwner());
+        this.setNumber(card.getNumber());
+        this.setExpirationDate(card.getExpirationDate());
+        this.setCvc(card.getCvc());
+        return this;
+    }
 }
