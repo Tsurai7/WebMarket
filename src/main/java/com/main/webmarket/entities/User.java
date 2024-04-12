@@ -44,6 +44,7 @@ public class User {
         this.password = password;
     }
 
+
     public void addProduct(Product product) {
         products.add(product);
         product.getUsers().add(this);

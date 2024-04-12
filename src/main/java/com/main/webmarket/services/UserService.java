@@ -7,8 +7,6 @@ import com.main.webmarket.entities.Product;
 import com.main.webmarket.entities.User;
 import com.main.webmarket.repositories.ProductRepository;
 import com.main.webmarket.repositories.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -94,7 +92,7 @@ public class UserService {
                         });
     }
 
-    public boolean register(User user) {
+    public User register(User user) {
 
         if (userRepository.findByName(user.getName()).isPresent()) {
             throw new IllegalArgumentException("User already exists");
@@ -102,7 +100,7 @@ public class UserService {
 
         User userInDb = new User(user.getName(), user.getPassword());
         userRepository.save(userInDb);
-        return true;
+        return userInDb;
     }
 
     public User update(Long id, User user) {

@@ -53,7 +53,7 @@ public class ProductService {
         existingProduct.setTitle(updatedProduct.getTitle());
         existingProduct.setDescription(updatedProduct.getDescription());
 
-        Product updatedProductResult = productRepository.save(existingProduct);
+        productRepository.save(existingProduct);
     }
 
 
