@@ -7,10 +7,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -32,10 +30,8 @@ class ProductServiceTests {
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(expectedProduct));
 
-        // Act
         Product result = productService.getById(productId);
 
-        // Assert
         verify(productRepository, times(1)).findById(productId);
         assertEquals(expectedProduct, result);
     }
@@ -46,7 +42,6 @@ class ProductServiceTests {
 
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(NoSuchElementException.class, () -> productService.getById(productId));
         verify(productRepository, times(1)).findById(productId);
     }
@@ -68,10 +63,8 @@ class ProductServiceTests {
         when(productRepository.findById(productId)).thenReturn(Optional.of(existingProduct));
         when(productRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
         productService.update(productId, updatedProduct);
 
-        // Assert
         assertEquals(updatedTitle, existingProduct.getTitle());
         assertEquals(updatedDescription, existingProduct.getDescription());
 
@@ -88,7 +81,6 @@ class ProductServiceTests {
 
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-        // Act and Assert
         assertThrows(NoSuchElementException.class, () -> productService.update(productId, updatedProduct));
 
         verify(productRepository, times(1)).findById(productId);
@@ -103,10 +95,8 @@ class ProductServiceTests {
 
         when(productRepository.findById(productId)).thenReturn(Optional.of(existingProduct));
 
-        // Act
         productService.delete(productId);
 
-        // Assert
         verify(productRepository, times(1)).findById(productId);
         verify(productRepository, times(1)).delete(existingProduct);
     }
@@ -117,7 +107,6 @@ class ProductServiceTests {
 
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-        // Act and Assert
         assertThrows(NoSuchElementException.class, () -> productService.delete(productId));
         verify(productRepository, times(1)).findById(productId);
         verify(productRepository, never()).delete(any());

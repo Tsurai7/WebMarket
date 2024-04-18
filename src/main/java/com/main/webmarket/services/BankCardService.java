@@ -35,10 +35,8 @@ public class BankCardService {
     @Transactional
     public void addCard(Long userId, BankCard card) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> {
-                    logger.error(String.format(USER_NOT_FOUND_MESSAGE, userId));
-                    return new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId));
-                });
+            .orElseThrow(() ->
+                new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId)));
 
         user.addCard(card);
         userRepository.save(user);
@@ -47,18 +45,14 @@ public class BankCardService {
 
     @Transactional
     public void removeCard(Long userId, Long cardId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            logger.error(String.format(USER_NOT_FOUND_MESSAGE, userId));
-            return new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId));
-        });
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId)));
 
         BankCard card = user.getBankCards().stream()
-                .filter(c -> c.getId().equals(cardId))
-                .findFirst()
-                .orElseThrow(() -> {
-                    logger.error(String.format(CARD_NOT_FOUND_MESSAGE, cardId));
-                    return new NoSuchElementException(String.format(CARD_NOT_FOUND_MESSAGE, cardId));
-                });
+            .filter(c -> c.getId().equals(cardId))
+            .findFirst()
+            .orElseThrow(() ->
+                new NoSuchElementException(String.format(CARD_NOT_FOUND_MESSAGE, cardId)));
 
         user.removeCard(card);
         bankCardRepository.delete(card);
@@ -68,10 +62,8 @@ public class BankCardService {
     @Transactional
     public BankCard updateCard(Long id, BankCard card) {
         return bankCardRepository.findById(id)
-                .orElseThrow(() -> {
-                    logger.error(String.format(CARD_NOT_FOUND_MESSAGE, id));
-                    return new NoSuchElementException(String.format(CARD_NOT_FOUND_MESSAGE, id));
-                })
-                .updateProperties(card);
+            .orElseThrow(() ->
+                    new NoSuchElementException(String.format(CARD_NOT_FOUND_MESSAGE, id)))
+            .updateProperties(card);
     }
 }

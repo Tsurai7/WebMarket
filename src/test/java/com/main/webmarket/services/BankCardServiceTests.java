@@ -8,12 +8,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -35,7 +33,6 @@ class BankCardServiceTests {
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // Act and Assert
         assertThrows(NoSuchElementException.class, () -> bankCardService.addCard(userId, card));
 
         verify(userRepository, times(1)).findById(userId);
@@ -49,7 +46,6 @@ class BankCardServiceTests {
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        // Act and Assert
         assertThrows(NoSuchElementException.class, () -> bankCardService.removeCard(userId, cardId));
 
         verify(userRepository, times(1)).findById(userId);
@@ -59,12 +55,10 @@ class BankCardServiceTests {
 
     @Test
     void testUpdateCard_CardDoesNotExist_ShouldThrowException() {
-        // Arrange
         long nonExistentCardId = 999L;
 
         when(bankCardRepository.findById(nonExistentCardId)).thenReturn(Optional.empty());
 
-        // Act and Assert
         assertThrows(
                 NoSuchElementException.class,
                 () -> bankCardService.updateCard(nonExistentCardId, new BankCard())

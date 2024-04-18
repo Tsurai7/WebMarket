@@ -14,28 +14,31 @@ import java.util.NoSuchElementException;
 
 @Service
 public class ProductService {
-    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepository productRepository;
+
+    private final RequestCounterService requestCounterService;
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
     private static final String PRODUCT_NOT_FOUND_MESSAGE = "Product not found with id: %d";
 
     @Autowired
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, RequestCounterService requestCounterService) {
         this.productRepository = productRepository;
+        this.requestCounterService = requestCounterService;
     }
 
-
     public List<Product> getAll() {
+        requestCounterService.incrementRequestsCount();
+        //logger.info("[New Request] counter value: " + requestCounterService.getRequestsCount());
         return productRepository.findAll();
     }
 
 
     public Product getById(Long id) {
         return productRepository.findById(id)
-            .orElseThrow(() -> {
-                logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
-                return new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
-            });
+            .orElseThrow(() ->
+                new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id)));
     }
 
     public Product create(Product product) {
@@ -50,10 +53,8 @@ public class ProductService {
                 existingProduct.setDescription(updatedProduct.getDescription());
                 return productRepository.save(existingProduct);
             })
-            .orElseThrow(() -> {
-                logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
-                return new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
-            });
+            .orElseThrow(() ->
+                new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id)));
     }
 
 
@@ -62,7 +63,6 @@ public class ProductService {
             .ifPresentOrElse(
                 productRepository::delete,
                 () -> {
-                    logger.error(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
                     throw new NoSuchElementException(String.format(PRODUCT_NOT_FOUND_MESSAGE, id));
                 }
             );

@@ -48,14 +48,14 @@ public class UserService {
     @Transactional
     public void addProductsToUser(Long userId, List<Long> productIds) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId)));
+            .orElseThrow(() ->
+                new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, userId)));
 
         List<Product> products = productIds.stream()
-                .map(productId -> productRepository.findById(productId)
-                        .orElseThrow(() ->
-                                new NoSuchElementException(String.format("Product with ID %d not found", productId))))
-                .collect(Collectors.toList());
+            .map(productId -> productRepository.findById(productId)
+                .orElseThrow(() ->
+                    new NoSuchElementException(String.format("Product with ID %d not found", productId))))
+            .collect(Collectors.toList());
 
         user.addProducts(products);
         userRepository.save(user);
@@ -74,7 +74,6 @@ public class UserService {
         user.removeProduct(product);
         userRepository.save(user);
     }
-
 
     public List<User> getAll() {
         return userRepository.findAll();
@@ -111,6 +110,4 @@ public class UserService {
         user.removeAllProducts();
         userRepository.deleteById(id);
     }
-
 }
-
