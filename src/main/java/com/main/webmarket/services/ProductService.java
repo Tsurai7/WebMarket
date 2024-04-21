@@ -18,8 +18,6 @@ public class ProductService {
 
     private final RequestCounterService requestCounterService;
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
-
     private static final String PRODUCT_NOT_FOUND_MESSAGE = "Product not found with id: %d";
 
     @Autowired
@@ -30,7 +28,6 @@ public class ProductService {
 
     public List<Product> getAll() {
         requestCounterService.incrementRequestsCount();
-        //logger.info("[New Request] counter value: " + requestCounterService.getRequestsCount());
         return productRepository.findAll();
     }
 
@@ -50,6 +47,9 @@ public class ProductService {
         productRepository.findById(id)
             .map(existingProduct -> {
                 existingProduct.setTitle(updatedProduct.getTitle());
+                existingProduct.setImage(updatedProduct.getImage());
+                existingProduct.setCategory(updatedProduct.getCategory());
+                existingProduct.setBrand(updatedProduct.getBrand());
                 existingProduct.setDescription(updatedProduct.getDescription());
                 return productRepository.save(existingProduct);
             })

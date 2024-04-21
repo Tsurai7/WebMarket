@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT p FROM User u JOIN u.products p WHERE u.id = :userId AND p.title = :title")
     Optional<Product> findProductByTitle(@Param("userId") Long userId, @Param("title") String title);
     Optional<User> findByName(String name);
+
+    Optional<User> findByEmail(String email);
 }

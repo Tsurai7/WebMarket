@@ -14,7 +14,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/products")
 @CrossOrigin(origins = "*")
-@SuppressWarnings({"checkstyle:MissingJavadocType", "checkstyle:MissingJavadocMethod"})
 public class ProductController {
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 

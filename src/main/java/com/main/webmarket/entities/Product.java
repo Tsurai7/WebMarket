@@ -9,6 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
+
+import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +23,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "products")
-@SuppressWarnings({"checkstyle:MissingJavadocType", "checkstyle:MissingJavadocMethod"})
 public class Product {
 
     @Id
@@ -31,6 +32,12 @@ public class Product {
     private String title;
 
     private String description;
+
+    private String image;
+
+    private String brand;
+
+    private String price;
 
     private String category;
 

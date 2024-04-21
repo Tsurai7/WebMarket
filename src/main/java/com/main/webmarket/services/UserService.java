@@ -85,12 +85,19 @@ public class UserService {
                 new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id)));
     }
 
-    public User register(User user) {
-        userRepository.findByName(user.getName()).ifPresent(existingUser -> {
+    public User signUp(User user) {
+        userRepository.findByEmail(user.getEmail()).ifPresent(existingUser -> {
             throw new IllegalArgumentException("User already exists");
         });
 
-        return userRepository.save(new User(user.getName(), user.getPassword()));
+        return  userRepository.save(new User(user.getName(), user.getImage(),
+                user.getEmail(), user.getPassword()));
+    }
+
+    public User signIn(User user) {
+        return userRepository.findByEmail(user.getEmail())
+                .filter(existingUser -> existingUser.getPassword().equals(user.getPassword()))
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
     public User update(Long id, User user) {

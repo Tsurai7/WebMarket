@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Scope("singleton")
 public class RequestCounterService {
     private final AtomicInteger requestsCount = new AtomicInteger(0);
-l
+
     public synchronized void incrementRequestsCount() {
         requestsCount.incrementAndGet();
     }

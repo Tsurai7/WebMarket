@@ -1,6 +1,5 @@
 package com.main.webmarket.controllers;
 
-import com.main.webmarket.entities.Product;
 import com.main.webmarket.entities.User;
 import com.main.webmarket.services.UserService;
 import org.slf4j.Logger;
@@ -11,11 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
-@SuppressWarnings({"checkstyle:MissingJavadocType", "checkstyle:MissingJavadocMethod"})
 public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -54,25 +53,21 @@ public class UserController {
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
 
-    /* @GetMapping("/getProductByTitle")
-    public ResponseEntity<Product> getProductByTitle(
-            @RequestParam Long userId, @RequestParam String title) {
-        logger.info("Endpoint called: /api/users/getProductByTitle");
-        return userService.getProductByTitle(userId, title) == null
-                ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
-                : new ResponseEntity<>(userService.getProductByTitle(userId, title), HttpStatus.OK);
-    } */
-
     @GetMapping("/getById")
     public User getById(@RequestParam Long id) {
-        logger.info("Endpoint called: /api/users/getById");
         return userService.getById(id);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        logger.info("Endpoint called: /api/users/register");
-        return new ResponseEntity<>(userService.register(user), HttpStatus.CREATED);
+    @PostMapping("/signUp")
+    public ResponseEntity<User> signUp(@RequestBody User user) {
+        return new ResponseEntity<>(userService.signUp(user), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/signIn")
+    public ResponseEntity<User> signIn(@RequestBody User user) {
+        return Optional.ofNullable(userService.signIn(user))
+                .map(loggedInUser -> ResponseEntity.ok(loggedInUser))
+                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
     @PutMapping("/update")

@@ -23,13 +23,16 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @Table(name = "users")
-@SuppressWarnings("checkstyle:MissingJavadocType")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+
+    private String image;
+
+    private String email;
 
     private String password;
 
@@ -39,11 +42,12 @@ public class User {
     @OneToMany(mappedBy = "holder", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<BankCard> bankCards = new HashSet<>();
 
-    public User(String name, String password) {
+    public User(String name, String image, String email, String password) {
         this.name = name;
+        this.image = image;
+        this.email = email;
         this.password = password;
     }
-
 
     public void addProduct(Product product) {
         products.add(product);

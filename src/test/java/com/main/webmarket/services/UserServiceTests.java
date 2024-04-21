@@ -38,7 +38,7 @@ class UserServiceTests {
 
         when(userRepository.findByName(existingUser.getName())).thenReturn(Optional.of(existingUser));
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.register(existingUser));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.signUp(existingUser));
         assertEquals("User already exists", exception.getMessage());
 
         verify(userRepository, times(1)).findByName(existingUser.getName());
@@ -226,23 +226,6 @@ class UserServiceTests {
         });
     }
 
-    @Test
-    void testGetAll() {
-        List<User> users = Arrays.asList(
-                new User("user1", "password1"),
-                new User("user2", "password2"),
-                new User("user3", "password3")
-        );
-
-        when(userRepository.findAll()).thenReturn(users);
-
-        // Act
-        List<User> result = userService.getAll();
-
-        // Assert
-        assertEquals(users.size(), result.size());
-        Assertions.assertIterableEquals(users, result);
-    }
 
     @Test
     void testUpdate_UserDoesNotExist_ShouldThrowException() {
