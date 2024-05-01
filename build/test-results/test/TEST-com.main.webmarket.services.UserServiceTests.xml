@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.main.webmarket.services.UserServiceTests" tests="13" skipped="0" failures="0" errors="0" timestamp="2024-05-01T21:15:59" hostname="Tsurais-MacBook-Pro.local" time="0.013">
+<testsuite name="com.main.webmarket.services.UserServiceTests" tests="13" skipped="0" failures="0" errors="0" timestamp="2024-05-01T21:39:50" hostname="Tsurais-MacBook-Pro.local" time="0.014">
   <properties/>
   <testcase name="testRemoveProductFromUser_ProductNotFound()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
   <testcase name="testRemoveProductFromUser_SuccessfullyRemoved()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
-  <testcase name="testGetById_UserExists()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
+  <testcase name="testGetById_UserExists()" classname="com.main.webmarket.services.UserServiceTests" time="0.0"/>
   <testcase name="testUpdate_UserDoesNotExist_ShouldThrowException()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
   <testcase name="addProductsToUser_ProductNotFound_ThrowsNoSuchElementException()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
   <testcase name="testRemoveProductFromUser_UserNotFound()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
-  <testcase name="testGetById_UserNotFound()" classname="com.main.webmarket.services.UserServiceTests" time="0.0"/>
+  <testcase name="testGetById_UserNotFound()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
   <testcase name="testDelete_UserNotFound()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
   <testcase name="addProductsToUser_UserNotFound_ThrowsNoSuchElementException()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
-  <testcase name="testDelete_UserExists()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
-  <testcase name="testAddProductToUser_ProductNotFound()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
-  <testcase name="testAddProductToUser_UserExists_ProductExists()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
+  <testcase name="testDelete_UserExists()" classname="com.main.webmarket.services.UserServiceTests" time="0.0"/>
+  <testcase name="testAddProductToUser_ProductNotFound()" classname="com.main.webmarket.services.UserServiceTests" time="0.0"/>
+  <testcase name="testAddProductToUser_UserExists_ProductExists()" classname="com.main.webmarket.services.UserServiceTests" time="0.0"/>
   <testcase name="addProductsToUser_Success()" classname="com.main.webmarket.services.UserServiceTests" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

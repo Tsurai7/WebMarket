@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.main.webmarket.services.ProductServiceTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-05-01T21:15:59" hostname="Tsurais-MacBook-Pro.local" time="0.019">
+<testsuite name="com.main.webmarket.services.ProductServiceTests" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-05-01T21:39:50" hostname="Tsurais-MacBook-Pro.local" time="0.018">
   <properties/>
-  <testcase name="testUpdate_ProductExists_ShouldUpdateProduct()" classname="com.main.webmarket.services.ProductServiceTests" time="0.014"/>
-  <testcase name="testUpdate_ProductDoesNotExist_ShouldThrowException()" classname="com.main.webmarket.services.ProductServiceTests" time="0.001"/>
-  <testcase name="testDelete_ProductDoesNotExist_ShouldThrowException()" classname="com.main.webmarket.services.ProductServiceTests" time="0.001"/>
-  <testcase name="testDelete_ProductExists_ShouldDeleteProduct()" classname="com.main.webmarket.services.ProductServiceTests" time="0.001"/>
-  <testcase name="testGetById_ProductDoesNotExist_ShouldThrowException()" classname="com.main.webmarket.services.ProductServiceTests" time="0.001"/>
-  <testcase name="testGetById_ProductExists_ShouldReturnProduct()" classname="com.main.webmarket.services.ProductServiceTests" time="0.001"/>
+  <testcase name="testUpdate_ProductExists_ShouldUpdateProduct()" classname="com.main.webmarket.services.ProductServiceTests" time="0.013"/>
+  <testcase name="testUpdate_ProductDoesNotExist_ShouldThrowException()" classname="com.main.webmarket.services.ProductServiceTests" time="0.0"/>
+  <testcase name="testDelete_ProductDoesNotExist_ShouldThrowException()" classname="com.main.webmarket.services.ProductServiceTests" time="0.0"/>
+  <testcase name="testDelete_ProductExists_ShouldDeleteProduct()" classname="com.main.webmarket.services.ProductServiceTests" time="0.0"/>
+  <testcase name="testGetById_ProductDoesNotExist_ShouldThrowException()" classname="com.main.webmarket.services.ProductServiceTests" time="0.0"/>
+  <testcase name="testGetById_ProductExists_ShouldReturnProduct()" classname="com.main.webmarket.services.ProductServiceTests" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
