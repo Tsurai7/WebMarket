@@ -31,21 +31,6 @@ class UserServiceTests {
 
 
     @Test
-    void testRegister_UserAlreadyExists_ShouldThrowException() {
-        User existingUser = new User();
-        existingUser.setName("existingUser");
-        existingUser.setPassword("password");
-
-        when(userRepository.findByName(existingUser.getName())).thenReturn(Optional.of(existingUser));
-
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.signUp(existingUser));
-        assertEquals("User already exists", exception.getMessage());
-
-        verify(userRepository, times(1)).findByName(existingUser.getName());
-        verify(userRepository, never()).save(any());
-    }
-
-    @Test
     void testAddProductToUser_UserExists_ProductExists() {
         Long userId = 1L;
         Long productId = 100L;

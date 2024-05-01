@@ -5,8 +5,8 @@ import Cookies from 'js-cookie';
 import { removeProduct, getAllProducts } from '../api/ProductApi';
 
 const Container = styled.div`
-  margin: 25px auto 0;
-  padding: 80px;
+  margin: 60px auto 0;
+  padding: 20px;
 `;
 
 const ProductList = styled.ul`
@@ -39,16 +39,13 @@ const ProductImage = styled.img`
 `;
 
 const ProductInfo = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
   flex: 1;
 `;
 
 
 const Button = styled(Link)`
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #000;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -59,52 +56,52 @@ const Button = styled(Link)`
 `;
 
 
-const MyProductsPage = () => {
+function MyProductsPage() {
   const [products, setProducts] = useState([]);
   const [productIds, setProductIds] = useState([]);
 
-const handleRemoveProduct = async (productId) => {
-  await removeProduct(productId)
+  const fetchProductsFromCookie = async () => {
+    const productIdsFromCookie = Cookies.get('myProducts') ? JSON.parse(Cookies.get('myProducts')) : [];
+    setProductIds(productIdsFromCookie);
 
-  const updatedProductIds = productIds.filter(id => id !== productId);
-  Cookies.set('myProducts', JSON.stringify(updatedProductIds));
+    const productsPromises = productIdsFromCookie.map(productId => fetchProductById(productId));
+    const productsData = await Promise.all(productsPromises);
 
-  const updatedProducts = products.filter(product => product.id !== productId);
-};
-  
+    setProducts(productsData.filter(product => product !== null));
+  };
+
+  const fetchProductById = async (productId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/products/getById?id=${productId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch product');
+      }
+      const productInfo = await response.json();
+      return productInfo;
+    } catch (error) {
+      console.error(`Error fetching product ${productId}:`, error);
+      return null;
+    }
+  };
+
+  const handleRemoveProduct = async (productId) => {
+    try {
+      await removeProduct(productId);
+
+      const updatedProductIds = productIds.filter(id => id !== productId);
+      Cookies.set('myProducts', JSON.stringify(updatedProductIds));
+
+      const updatedProducts = products.filter(product => product.id !== productId);
+      setProductIds(updatedProductIds);
+      setProducts(updatedProducts);
+    } catch (error) {
+      console.error('Error removing product:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchProductInfo = async (productId) => {
-      try {
-        const response = await fetch(`http://localhost:8080/api/products/getById?id=${productId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch product');
-        }
-        const productInfo = await response.json();
-        console.log(productInfo);
-
-        return productInfo;
-        
-      } catch (error) {
-        console.error(`Error fetching product ${productId}:`, error);
-        return null;
-      }
-    };
-
-    const fetchProductsFromCookie = async () => {
-      const productIds = Cookies.get('myProducts') ? JSON.parse(Cookies.get('myProducts')) : [];
-      const productPromises = productIds.map(productId => fetchProductInfo(productId));
-
-      const productsData = await Promise.all(productPromises);
-
-      const validProducts = productsData.filter(product => product !== null);
-
-      console.log(validProducts)
-      setProducts(validProducts);
-    };
-
     fetchProductsFromCookie();
-  }, []);
+  }, []); 
 
   return (
     <Container>

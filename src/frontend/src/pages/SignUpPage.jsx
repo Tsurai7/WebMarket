@@ -77,14 +77,14 @@ function SignUpPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Остановка отправки формы по умолчанию
-    
+
     const data = await signUp(name, email, image, password);
 
     console.log('User registered successfully:', data);
     
     Cookies.set('username', data.name);
     Cookies.set('password', data.password);
-    Cookies.set('image', data.image);
+    Cookies.set('profileImage', data.image);
     Cookies.set('userId', data.id);
     
     navigate('/catalog');
@@ -94,10 +94,13 @@ function SignUpPage() {
   return (
     <Container>
       <TitleContainer>
-        <Link to="/signin">
-          <Title>Sign In</Title>
-        </Link>
-      </TitleContainer>
+      <Link to="/signin">
+        <Title>Sign In</Title>
+      </Link>
+      <Link to="/signup">
+        <Title>Sign Up</Title>
+      </Link>
+    </TitleContainer>
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <Label htmlFor="name">Username:</Label>
@@ -129,7 +132,7 @@ function SignUpPage() {
             value={image}
             onChange={(e) => setImage(e.target.value)}
             placeholder="Enter URL of your image"
-            required
+            required={false}
           />
         </FormGroup>
         <FormGroup>

@@ -125,11 +125,10 @@ function CatalogPage() {
         throw new Error('Network response was not ok');
       }
   
-      setCartItems(prevState => {
-        const updatedCartItems = { ...prevState };
-        delete updatedCartItems[productId];
-        return updatedCartItems;
-      });
+      setCartItems(prevState => ({
+        ...prevState,
+        [productId]: (prevState[productId] || 0) - 1
+      }));
     } catch (error) {
       setError(error);
     }

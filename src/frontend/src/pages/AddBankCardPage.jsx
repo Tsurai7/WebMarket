@@ -3,15 +3,21 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
-import { addBankCard } from '../api/UserApi';
+import { addBankCard } from '../api/BankCardApi';
 
 const Container = styled.div`
   max-width: 400px;
-  margin: 80px auto;
+  margin: 100px auto;
   padding: 40px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const Title = styled.h2`
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
 `;
 
 const Form = styled.form`
@@ -37,22 +43,22 @@ const Input = styled.input`
   border-radius: 4px;
   border: 1px solid #ccc;
   font-size: 16px;
+  margin-bottom: 10px;
 `;
 
 const Button = styled.button`
-  padding: 12px;
-  margin-top: 16px;
-  margin-right: 40px;
-  margin-left: 40px;
-  background-color: #007bff;
+  background-color: #000;
   color: #fff;
   border: none;
   border-radius: 4px;
+  padding: 10px 20px;
+  margin-top: 20px;
   cursor: pointer;
+  padding-top: 12px;
   transition: background-color 0.3s ease;
-  font-size: 16px;
+
   &:hover {
-    background-color: #0056b3;
+    background-color: #333;
   }
 `;
 
@@ -72,6 +78,7 @@ const AddBankCardPage = () => {
   
   return (
     <Container>
+      <Title>Add Bank Card</Title>
       <Form onSubmit={handleSubmit}>
       <Label htmlFor="cardOwner">Card Owner:</Label>
         <Input

@@ -41,12 +41,19 @@ const TextArea = styled.textarea`
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
   background-color: #000;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 4px;
+  padding: 10px 20px;
+  margin-right: 4px;
+  margin-left: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #333;
+  }
 `;
 
 function EditProductPage() {
@@ -55,24 +62,32 @@ function EditProductPage() {
     const [category, setCategory] = useState('');
     const [image, setImage] = useState('');
     const [brand, setBrand] = useState('');
+    const [price, setPrice] = useState('');
+
     const navigate = useNavigate();
+
     const { productId } = useParams();
   
     useEffect(() => {
         const fetchProductInfo = async () => {
             try {
                 const response = await fetch(`http://localhost:8080/api/products/getById?id=${productId}`);
+
                 if (!response.ok) {
                     throw new Error('Failed to fetch product');
                 }
                 const productInfo = await response.json();
 
-                console.log(productInfo);
+                
                 setTitle(productInfo.title);
                 setDescription(productInfo.description);
                 setCategory(productInfo.category);
-                setImage(productInfo.image);
+                setImage(productInfo.image);         
                 setBrand(productInfo.brand);
+                setPrice(productInfo.price);
+
+                console.log(productInfo);
+
             } catch (error) {
                 console.error('Error fetching product:', error);
             }
@@ -89,9 +104,10 @@ function EditProductPage() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ title, description, category, image, brand }),
+          body: JSON.stringify({ title, description, category, image, brand, price }),
         });
         if (response.ok) {
+          console.log(JSON.stringify({ title, description, category, image, brand, price }));
   
           console.log('Product updated successfully!');
   
@@ -150,6 +166,15 @@ function EditProductPage() {
             id="brand"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <Label htmlFor="price">Price:</Label>
+          <Input
+            type="text"
+            id="price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
           />
         </InputWrapper>
         <Button type="submit">Save Changes</Button>

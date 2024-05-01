@@ -9,7 +9,6 @@ export const getUserById = async (id) => {
 
 
 export const signIn = async (email, password) => {
-    
     const response = await fetch(`${BASE_URL}/signIn`, {
         method: 'POST',
         headers: {
@@ -20,7 +19,7 @@ export const signIn = async (email, password) => {
     console.log(response)
 
     if (!response.ok) {
-        throw new Error('Error signing in');
+        console.log('Error signing in');
     }
 
     const data = await response.json();
@@ -63,31 +62,6 @@ export const addToCart = async (userId, productId) => {
 
 export const removeFromCart = async (userId, productId) => {
     const response = await fetch(`${BASE_URL}/removeProduct?userId=${userId}&productId=${productId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    });
-    const data = await response.json();
-    return data;
-}
-
-
-export const addBankCard = async (userId, bankCard) => {
-    const response = await fetch(`${BASE_URL}/addBankCard?userId=${userId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ bankCard })
-    });
-    const data = await response.json();
-    return data;
-}
-
-
-export const removeBankCard = async (userId, bankCardId) => {
-    const response = await fetch(`${BASE_URL}/removeBankCard?userId=${userId}&bankCardId=${bankCardId}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'

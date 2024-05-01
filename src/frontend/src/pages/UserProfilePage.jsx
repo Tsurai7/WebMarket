@@ -21,6 +21,16 @@ const UserInfo = styled.div`
   flex: 1;
 `;
 
+const ProductTitle = styled.h1`
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+`;
+
+
+const ProductInfo = styled.div`
+  flex: 1;
+`;
+
 const UserImage = styled.img`
   width: 150px;
   height: 150px;
@@ -42,15 +52,16 @@ const ExpandableList = styled.ul`
 `;
 
 const ExpandableListItem = styled.li`
-  background-color: #fff;
-  padding: 20px;
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
   border-radius: 8px;
-  cursor: pointer;
+  padding: 8px;
+  margin-bottom: 8px;
 `;
 
 const ProductImage = styled.img`
-  width: 140px;
+  width: 200px;
   height: auto;
   margin-right: 20px;
 `;
@@ -61,13 +72,19 @@ const ProductQuantity = styled.span`
 `;
 
 const Button = styled.button`
-  background-color: #007bff;
+  background-color: #000;
   color: #fff;
   border: none;
   border-radius: 4px;
   padding: 10px 20px;
+  margin-right: 4px;
+  margin-left: 4px;
   cursor: pointer;
-  margin-top: 20px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #333;
+  }
 `;
 
 
@@ -180,12 +197,33 @@ const UserProfilePage = () => {
     }
   };
 
+  const handleRemoveCard = async (cardId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/cards/remove?userId=${Cookies.get('userId')}&cardId=${cardId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + cardId);
+      }
+
+      fetchUserData();
+    } catch (error) {
+      console.error('Error removing card:', error);
+    }
+  };
+
+
+
   const logout = () => {
     Cookies.remove('userId');
     Cookies.remove('username');
     Cookies.remove('password');
     Cookies.remove('profileImage');
-    navigate('/market');
+    navigate('/signup');
     window.location.reload();
   };
 
@@ -198,22 +236,18 @@ const UserProfilePage = () => {
           <ExpandableList>
             {groupProductsById(data).map(item => (
               <ExpandableListItem key={item.id}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <UserHeading>{item[titleKey]}</UserHeading>
+                <ProductInfo>
+                    <ProductTitle>{item[titleKey]}</ProductTitle>
                     <ProductImage src={item.image} alt={item.title} />
                     {contentKeys.map(key => (
-                      <UserData key={key}>{key}: {item[key]}</UserData>
+                      <p key={key}>{key}: {item[key] }</p>
                     ))}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-
-                      <Button onClick={() => handleAddProduct(item.id)}>+</Button>
+                    </ProductInfo>
+                  <div>
+                      <Button style={{ marginLeft: 'auto' }} onClick={() => handleAddProduct(item.id)}>+</Button>
                       <ProductQuantity>{item.quantity}</ProductQuantity>
                       <Button onClick={() => handleRemoveProduct(item.id)}>-</Button>
-                    <p>Total: {item.quantity * item.price}$</p>
                   </div>
-                </div>
               </ExpandableListItem>
             ))}
           </ExpandableList>
@@ -229,18 +263,23 @@ const UserProfilePage = () => {
         <h3 onClick={toggleHandler}>{titleKey}</h3>
         {expanded && (
           <ExpandableList>
+            <Container>
             {groupProductsById(data).map(item => (
               <ExpandableListItem key={item.id}>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <div style={{ flex: 1 }}>
-                    <UserHeading>{item[titleKey]}</UserHeading>
+                    <p>{item[titleKey]}</p>
                     {contentKeys.map(key => (
-                      <UserData key={key}>{key}: {item[key]}</UserData>
+                      <p key={key}>{key}: {item[key]}</p>
                     ))}
                   </div>
+                  <div>
+                  <Button onClick={() => handleRemoveCard(item.id)}>Remove card</Button>
+                  </div>
                 </div>
-              </ExpandableListItem>
+              </ExpandableListItem>           
             ))}
+            </Container>
           </ExpandableList>
         )}
       </>
@@ -252,13 +291,13 @@ const UserProfilePage = () => {
       {userData ? (
         <div>
           <UserDataContainer>
-            <UserImage src={Cookies.get('profileImage') != undefined ? Cookies.get('profileImage') : 'https://sun9-25.userapi.com/impg/_7v95fIPpNcU0bUPS-A9tUwjrbrviv24lEwWbw/DPZxKLBFgbA.jpg?size=800x800&quality=96&sign=0544c0bc5c9852c5d4ccc1e7102428e2&c_uniq_tag=Qo9crsjqzU1ngG34RehSm8T_a6KqibgCsfbMsTmNMoY&type=album'}/>
+            <UserImage src={Cookies.get('profileImage') !== undefined ? Cookies.get('profileImage') : 'https://sun9-25.userapi.com/impg/_7v95fIPpNcU0bUPS-A9tUwjrbrviv24lEwWbw/DPZxKLBFgbA.jpg?size=800x800&quality=96&sign=0544c0bc5c9852c5d4ccc1e7102428e2&c_uniq_tag=Qo9crsjqzU1ngG34RehSm8T_a6KqibgCsfbMsTmNMoY&type=album'}/>
             <UserInfo>
               <UserHeading>{userData.name}</UserHeading>
               <UserData>Id: {userData.id}</UserData>
               <UserData>Email: {userData.email}</UserData>
               <UserData>Password: {userData.password}</UserData>
-              <Button onClick={logout}>Logout</Button>
+              <Button style={{ 'background-color': '#333333', 'margin-left': '100px' }} onClick={logout}>Logout</Button>
             </UserInfo>
           </UserDataContainer>
 

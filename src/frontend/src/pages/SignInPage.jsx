@@ -75,7 +75,7 @@ function SignInPage() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Остановка отправки формы по умолчанию
+    e.preventDefault();
 
     const data = await signIn(email, password);
 
